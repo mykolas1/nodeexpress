@@ -8,8 +8,8 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.listen(3000, function() {
-    console.log('listening on 3000')
+app.listen(process.env.PORT||5000, function() {
+    console.log('listening on 5000')
   })
 
   app.get('/employees', function (req, res) {
