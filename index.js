@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const cors = require('cors');
 
 const bodyparser = require('body-parser');
 
@@ -8,11 +9,13 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(cors());
+
 app.listen(process.env.PORT||5000, function() {
     console.log('listening on 5000')
   })
 
-  app.get('/employees', function (req, res) {
+  app.get('/employees', cors(), function (req, res) {
     mySqlConnection.query('SELECT * FROM employee', (err, rows, fields)=> {
         if(!err) {
             console.log(rows);
@@ -23,7 +26,7 @@ app.listen(process.env.PORT||5000, function() {
     });
   });
 
-  app.post('/employee', (req, res) => {
+  app.post('/employee', cors(), (req, res) => {
     console.log('post');
     mySqlConnection.query('INSERT INTO employee (Name, EmpCode, Salary) VALUES (?, ?, ?);', [req.body.name, req.body.empCode, req.body.salary], 
       		function (err, results, fields) {
@@ -33,7 +36,7 @@ app.listen(process.env.PORT||5000, function() {
     res.sendStatus(200);
   });
 
-  app.post('/employee/update', (req, res) => {
+  app.put('/employee/update', cors(), (req, res) => {
     console.log('update');
     mySqlConnection.query('UPDATE employee SET Name = ?, EmpCode = ?, Salary = ? WHERE EmpID = ?', [req.body.name, req.body.empCode, req.body.salary, req.body.id], 
 			function (err, results, fields) {
@@ -43,7 +46,7 @@ app.listen(process.env.PORT||5000, function() {
     res.sendStatus(200);
   });
 
-  app.delete('/employee/:id/delete', (req, res) => {
+  app.delete('/employee/:id/delete', cors(), (req, res) => {
     console.log('delete');
     mySqlConnection.query('DELETE FROM employee WHERE EmpID = ?', [req.params.id], 
 			function (err, results, fields) {
