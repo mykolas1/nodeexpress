@@ -8,11 +8,11 @@ const bodyParser= require('body-parser');
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.set('trust proxy', true);
 app.use(cors());
 
-app.listen(process.env.PORT||5000, function() {
-    console.log('listening on 5000')
+app.listen(8080, function() {
+    console.log('listening on 8080')
   })
 
   app.get('/employees', cors(), function (req, res) {
@@ -24,6 +24,10 @@ app.listen(process.env.PORT||5000, function() {
         else
             console.log(err);
     });
+  });
+  
+  app.get('/test', cors(), function (req, res) {
+    res.send("TEST IS GOOD");
   });
 
   app.post('/employee', cors(), (req, res) => {
@@ -38,6 +42,7 @@ app.listen(process.env.PORT||5000, function() {
 
   app.put('/employee/update', cors(), (req, res) => {
     console.log('update');
+    console.log(req.body);
     mySqlConnection.query('UPDATE employee SET Name = ?, EmpCode = ?, Salary = ? WHERE EmpID = ?', [req.body.name, req.body.empCode, req.body.salary, req.body.id], 
 			function (err, results, fields) {
 				if (err) throw err;
@@ -57,8 +62,8 @@ app.listen(process.env.PORT||5000, function() {
   });
 
 var mySqlConnection = mysql.createConnection({
-    host: "randomlion.mysql.database.azure.com",
-    user: "randomlion@randomlion",
+    host: "35.228.202.115",
+    user: "root",
     password: "Macbookpro12321",
     database: "guest",
     port: 3306,
